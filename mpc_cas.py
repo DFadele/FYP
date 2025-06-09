@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from casadiNN import nn_func  # Your CasADi NN function
 from tqdm import tqdm
 
-# === MPC + Simulation Settings ===
 N = 2
 dt = 0.005
 n_state = 12
@@ -16,7 +15,6 @@ Q = np.diag([10.0, 10.0, 10.0] + [0.1]*(n_state - 3))
 R = np.diag([0.1]*n_input)
 x_ref = np.array([1.0, 0.0, -1.0] + [0.0]*(n_state - 3))
 
-# === CasADi Symbols ===
 x0 = ca.MX.sym("x0", n_state)
 U = ca.MX.sym("U", n_input, N)
 X = [x0]
@@ -49,7 +47,7 @@ solver = ca.nlpsol("solver", "ipopt", nlp,{
     "ipopt.linear_solver":"mumps"
 })
 
-# === Closed-Loop Simulation ===
+# Closed-Loop Simulation 
 x_log = np.zeros((n_state, steps+1))
 u_log = np.zeros((n_input, steps))
 x_log[:, 0] = np.zeros(n_state)
@@ -69,7 +67,7 @@ for t in tqdm(range(steps),desc="Running Simulation..."):
     x_next = nn_func(np.concatenate([x_t, u_apply])).full().flatten()
     x_log[:, t+1] = x_next
 
-# === Plot ===
+
 plt.figure(figsize=(10, 5))
 plt.subplot(2, 1, 1)
 t = np.arange(steps+1)*dt

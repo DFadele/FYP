@@ -28,10 +28,9 @@ motor_positions = [
 ]
 
 def update_camera(drone_id, camera_distance=1.5, yaw=50, pitch=-30):
-    # Get drone position
     pos, _ = p.getBasePositionAndOrientation(drone_id)
 
-    # Update camera position to track the drone
+    # Update camera position 
     p.resetDebugVisualizerCamera(
         cameraDistance=camera_distance,
         cameraYaw=yaw,
@@ -40,8 +39,7 @@ def update_camera(drone_id, camera_distance=1.5, yaw=50, pitch=-30):
     )
 
 def compute_control(current_state, desired_state):
-    # Placeholder for control logic (e.g., PID controller, MPC, etc.)
-    # For now, just return a dummy control input
+    # control logic
     n_states = 12
     n_inputs = 4
     N = 10
@@ -91,9 +89,9 @@ def apply_motor_forces(drone_id,control_input: np.ndarray):
         p.applyExternalForce(
             objectUniqueId=drone_id,
             linkIndex=-1,
-            forceObj=[0, 0, motor_forces[i]],  # apply upward
+            forceObj=[0, 0, motor_forces[i]],  
             posObj=motor_positions[i],
-            flags=p.LINK_FRAME # or try LINK_FRAME
+            flags=p.LINK_FRAME 
         )
 
 num = 0
@@ -106,7 +104,7 @@ while True:
 
     state = np.array([pos[0], pos[1], pos[2], roll, pitch, yaw, lin_vel[0], lin_vel[1], lin_vel[2], ang_vel[0], ang_vel[1], ang_vel[2]])
     #print(f"{state}, Iter: {num}\r", end="")
-    control_input = compute_control(state, desired_state)  # Placeholder for control logic
+    control_input = compute_control(state, desired_state)  
     print(f"Control Input: {control_input} Iteration: {num}\r",end="")
     apply_motor_forces(drone, control_input)
     p.stepSimulation()
