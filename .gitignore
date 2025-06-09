@@ -1,0 +1,13 @@
+*.m
+InitialReport/
+FinalReport/
+gym-pybullet-drones/
+pyplot3d
+.vscode/
+.venv/
+*.gif
+*.mp4
+__pycache__/
+*.pth
+MPCCourse/
+Results/
