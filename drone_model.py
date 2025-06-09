@@ -5,7 +5,7 @@ from sympy import sin, cos, tan
 
 class DroneModel:
     def __init__(self, Ts):
-        # Match physical parameters to nonlinear model
+        
         self.m = 0.65
         self.Ix = 7.5e-3
         self.Iy = 7.5e-3
@@ -13,7 +13,7 @@ class DroneModel:
         self.Ts = Ts
         self.T = 0
 
-        # Symbolic variables
+        
         x, y, z, u, v, w = sp.symbols('x y z u v w')
         phi, theta, psi = sp.symbols('phi theta psi')
         p, q, r = sp.symbols('p q r')
@@ -42,14 +42,14 @@ class DroneModel:
         Asym = f.jacobian(state_syms)
         Bsym = f.jacobian(input_syms)
 
-        # Lambdified functions for fast numerical evaluation
+        # Lambdified functions 
         self.A_func = sp.lambdify((x, y, z, u, v, w, phi, theta, psi, p, q, r,
                                    u1, u2, u3, u4, m, g, Ix, Iy, Iz), Asym, 'numpy')
         self.B_func = sp.lambdify((x, y, z, u, v, w, phi, theta, psi, p, q, r,
                                    u1, u2, u3, u4, m, g, Ix, Iy, Iz), Bsym, 'numpy')
 
     def computeA(self, current_state):
-        # Use hover input as default trim
+        # hover input as default trim
         u1_eq = self.m * 9.81
         u2_eq, u3_eq, u4_eq = 0, 0, 0
         #clipped_state = current_state.copy()
@@ -61,7 +61,7 @@ class DroneModel:
         self.A = np.array(self.A_func(*values), dtype=np.float64)
         self.B = np.array(self.B_func(*values), dtype=np.float64)
 
-        # Discretise
+        # Discretisation
         sys = ctrl.ss(self.A, self.B, np.eye(12), np.zeros((12, 4)))
         sysd = ctrl.c2d(sys, Ts=self.Ts)
         self.Ad = sysd.A
