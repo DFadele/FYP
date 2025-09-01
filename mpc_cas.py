@@ -1,7 +1,7 @@
 import casadi as ca
 import numpy as np
 import matplotlib.pyplot as plt
-from casadiNN import nn_func  # Your CasADi NN function
+from casadiNN import nn_func 
 from tqdm import tqdm
 
 N = 2
